@@ -6,9 +6,7 @@ Please note that I've not yet tested this with an NVIDIA GPU.
 
 ## Requirements
 
-- Docker and Docker Compose installed on target hosts
-- Ansible 2.15+
-- Community.docker collection
+- [Docker](https://docs.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) installed on target hosts
 
 ## Role Variables
 
@@ -16,11 +14,11 @@ See [`defaults/main.yml`](defaults/main.yml) and [`vars/main.yml`](vars/main.yml
 
 ### GPU Support
 
-[Ollama's GPU support](https://github.com/ollama/ollama/blob/main/docs/gpu.md) documentation.
+More information on [Ollama's GPU support](https://github.com/ollama/ollama/blob/main/docs/gpu.md) in their documentation.
 
 #### None/CPU (default)
 
-To run on CPU only:
+To run models on the CPU:
 
 ```yaml
 ollama_gpu_type: "none"
@@ -28,17 +26,17 @@ ollama_gpu_type: "none"
 
 #### AMD
 
-To use an AMD GPU:
+To run models on an AMD GPU:
 
 ```yaml
 ollama_gpu_type: "amd"
 ```
 
-This will automatically set the `ollama_image_tag` variable to `rocm`, and will mount the appropriate dri
+This will automatically set the `ollama_image_tag` variable to `rocm`, and will mount the appropriate devices for AMD GPUs.
 
 #### NVIDIA
 
-To use an NVIDIA GPU:
+To run models on an NVIDIA GPU:
 
 ```yaml
 ollama_gpu_type: "nvidia"
@@ -75,7 +73,7 @@ ollama_delete_models:
 
 ## Dependencies
 
-- community.docker
+- [community.docker](https://docs.ansible.com/ansible/latest/collections/community/docker/index.html)
 
 Example Playbook
 ----------------
