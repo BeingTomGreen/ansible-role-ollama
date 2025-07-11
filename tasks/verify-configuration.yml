@@ -1,0 +1,81 @@
+---
+
+- name: Fail with invalid GPU configuration
+  when: ollama_gpu_type not in ['none', 'nvidia', 'amd', 'jetson']
+  ansible.builtin.fail:
+    msg: "ollama_gpu_type must be one of: none, nvidia, amd, jetson"
+  tags:
+    - ollama
+    - validation
+
+- name: Check required devices
+  when: ollama_device_mappings[ollama_gpu_type] | length > 0
+  ansible.builtin.stat:
+    path: "{{ item }}"
+  register: stat_result
+  loop: "{{ ollama_device_mappings[ollama_gpu_type] }}"
+  tags:
+    - ollama
+    - validation
+
+- name: Fail if required devices are missing
+  when: not item.stat.exists
+  ansible.builtin.fail:
+    msg: "Required device {{ item.item.split(':')[0] }} does not exist."
+  loop: "{{ stat_result.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  tags:
+    - ollama
+    - validation
+
+# TODO - Test this actually works I don't have a NVIDIA GPU handy
+# - name: Validate NVIDIA GPU requirements
+#   when: ollama_gpu_type == 'nvidia'
+#   tags:
+#     - ollama
+#     - validation
+#   block:
+#     - name: Validate that `nvidia-smi` is available
+#       ansible.builtin.command: which nvidia-smi
+#       register: nvidia_smi_check
+#       changed_when: false
+#       failed_when: nvidia_smi_check.rc != 0
+
+#     - name: Validate that nvidia-container-toolkit is installed
+#       block:
+#         - name: Validate dpkg
+#           when: ansible_facts.pkg_mgr == "apt"
+#           ansible.builtin.command: dpkg -s nvidia-container-toolkit
+#           register: nvidia_toolkit_check_dpkg
+#           changed_when: false
+#           failed_when: false
+
+#         - name: Validate rpm
+#           when: ansible_facts.pkg_mgr in ["yum", "dnf"]
+#           ansible.builtin.command: rpm -q nvidia-container-toolkit
+#           register: nvidia_toolkit_check_rpm
+#           changed_when: false
+#           failed_when: false
+
+#         - name: Fail if nvidia-container-toolkit is not installed
+#           when: >
+#             (ansible_facts.pkg_mgr == "apt" and nvidia_toolkit_check_dpkg.rc != 0) or
+#             (ansible_facts.pkg_mgr in ["yum", "dnf"] and nvidia_toolkit_check_rpm.rc != 0)
+#           ansible.builtin.fail:
+#             msg: "nvidia-container-toolkit is not installed. Please install it before running this role."
+
+#     - name: Validate NVIDIA Docker runtime configuration
+#       ansible.builtin.command: nvidia-ctk runtime list --output-format=json
+#       register: nvidia_runtime_config
+#       changed_when: false
+#       failed_when: false
+
+#     - name: Fail if Docker runtime is not configured for NVIDIA
+#       ansible.builtin.fail:
+#         msg: "NVIDIA Docker runtime is not configured. Run: nvidia-ctk runtime configure --runtime=docker"
+#       when: >
+#         nvidia_runtime_config.stdout is not defined or
+#         ('docker' not in (nvidia_runtime_config.stdout | from_json)) or
+#         ((nvidia_runtime_config.stdout | from_json).docker.enabled is not defined or
+#          not (nvidia_runtime_config.stdout | from_json).docker.enabled)

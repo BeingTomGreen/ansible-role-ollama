@@ -1,0 +1,10 @@
+---
+
+- name: Verify configuration
+  ansible.builtin.import_tasks: verify-configuration.yml
+
+- name: Configure Docker
+  ansible.builtin.import_tasks: create-docker-container.yml
+
+- name: Configure Ollama Models
+  ansible.builtin.import_tasks: configure-ollama-models.yml

@@ -1,0 +1,55 @@
+---
+
+- name: Ensure Ollama data volume is present
+  community.docker.docker_volume:
+    name: "{{ ollama_data_volume.name | default('ollama_data') }}"
+    driver: "{{ ollama_data_volume.driver | default('local') }}"
+    driver_options: "{{ ollama_docker_volume.driver_opts | default(omit) }}"
+    labels: "{{ ollama_docker_volume.labels | default(omit) }}"
+    state: present
+  tags:
+    - ollama
+    - docker
+    - volumes
+
+- name: Set default Docker image tag based on GPU type
+  when: ollama_image_tag is not defined or ollama_image_tag | length == 0
+  ansible.builtin.set_fact:
+    ollama_image_tag: "{{ 'rocm' if ollama_gpu_type == 'amd' else 'latest' }}"
+  tags:
+    - ollama
+    - docker
+    - images
+
+- name: Ensure Ollama Docker image is present
+  community.docker.docker_image:
+    name: "{{ ollama_image_name }}"
+    tag: "{{ ollama_image_tag }}"
+    source: pull
+    state: present
+  register: ollama_image_pull
+  tags:
+    - ollama
+    - docker
+    - images
+
+- name: Ensure Ollama Docker container is started
+  community.docker.docker_container:
+    name: "{{ ollama_container_name }}"
+    image: "{{ ollama_image_name }}:{{ ollama_image_tag }}"
+    state: "{{ ollama_state }}"
+    restart_policy: "{{ ollama_container_policy }}"
+    ports:
+      - "{{ ollama_host }}:{{ ollama_port }}:11434"
+    volumes:
+      - "{{ ollama_data_volume.name }}:/root/.ollama"
+    networks: "{{ ollama_networks if ollama_networks | length > 0 else omit }}"
+    devices: "{{ ollama_device_mappings[ollama_gpu_type] | default(omit) }}"
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 5 bash -c '</dev/tcp/{{ ollama_host }}/{{ ollama_port }}'"]
+      start_period: 30s
+  register: ollama_container
+  tags:
+    - ollama
+    - docker
+    - containers

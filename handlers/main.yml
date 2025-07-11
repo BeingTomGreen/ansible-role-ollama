@@ -1,0 +1,17 @@
+---
+
+- name: Start Ollama
+  community.docker.docker_container:
+    name: "{{ ollama_container_name }}"
+    state: started
+
+- name: Restart Ollama
+  community.docker.docker_container:
+    name: "{{ ollama_container_name }}"
+    state: started
+    restart: true
+
+- name: Stop Ollama
+  community.docker.docker_container:
+    name: "{{ ollama_container_name }}"
+    state: stopped

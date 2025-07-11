@@ -1,0 +1,21 @@
+galaxy_info:
+  author: Tom Green
+  description: A simple role for installing and managing Ollama in a Docker container.
+
+  role_name: ollama
+  namespace: beingtomgreen
+
+  license: MIT
+
+  min_ansible_version: "2.18"
+
+  galaxy_tags:
+    - homelab
+    - ollama
+    - docker
+    - container
+
+dependencies: []
+
+collections:
+  - community.docker

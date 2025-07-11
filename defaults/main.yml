@@ -1,0 +1,56 @@
+---
+
+# Name of the Ollama container
+ollama_container_name: "ollama"
+
+# The Ollama docker image
+ollama_image_name: "ollama/ollama"
+
+# Defaults to latest/rocm depending on GPU selection
+ollama_image_tag: ""
+
+# Ollama container state
+ollama_state: "started"
+
+# Ollama container restart policy
+ollama_container_policy: "unless-stopped"
+
+# Configure the Ollama container data volume
+ollama_data_volume:
+  name: ollama_data
+  # driver: local
+  # driver_opts: {}
+  # labels: {}
+
+# Configure the Ollama container networks
+ollama_networks: []
+# Example:
+# ollama_networks:
+#   - my_ollama_network
+#   - my_other_ollama_network
+
+# Ollama container interface/port mapping
+ollama_host: "127.0.0.1"
+ollama_port: "11434"
+
+# GPU configuration
+# Options "none"," "amd", or "nvidia"
+ollama_gpu_type: "none"
+
+# Internal network configuration
+# ollama_internal_host: "{{ ollama_container_name }}"  # Container name for internal network communication
+# ollama_internal_port: "11434"  # Internal port (same as external but used for container-to-container communication)
+
+# Ollama models to pull
+ollama_pull_models: []
+# Example:
+# ollama_models:
+#   - name: "gemma3"
+#     tag: "4b"
+#     force_pull: false
+#   - name: "deepseek-r1"
+#     tag: "70b"
+#     force_pull: true
+
+# Ollama models to delete
+ollama_delete_models: []
