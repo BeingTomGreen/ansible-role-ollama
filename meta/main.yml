@@ -3,7 +3,7 @@ galaxy_info:
   description: A simple role for installing and managing Ollama in a Docker container.
 
   role_name: ollama
-  namespace: beingtomgreen
+  namespace: BeingTomGreen
 
   license: MIT
 
