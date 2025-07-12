@@ -4,6 +4,26 @@ A simple Ansible role to deploy [Ollama in a Docker container](https://github.co
 
 Please note that I've not yet tested this with an NVIDIA GPU.
 
+## Installation
+
+Given that Galaxy seems to have abandoned roles, I suggest referencing this repository directly in your projects `requirements.yml`:
+
+```yml
+---
+
+roles:
+  - name: ollama
+    src: https://github.com/BeingTomGreen/ansible-role-ollama.git
+
+collections: []
+```
+
+You can then install the requirements as normal:
+
+```bash
+ansible-galaxy install -r requirements.yml
+```
+
 ## Requirements
 
 - [Docker](https://docs.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) installed on target hosts
