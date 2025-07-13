@@ -26,8 +26,8 @@ ollama_data_volume:
 ollama_networks: []
 # Example:
 # ollama_networks:
-#   - my_ollama_network
-#   - my_other_ollama_network
+#   - name: my_ollama_network
+#   - name: my_other_ollama_network
 
 # Ollama container interface/port mapping
 ollama_host: "127.0.0.1"

@@ -43,7 +43,7 @@
       - "{{ ollama_host }}:{{ ollama_port }}:11434"
     volumes:
       - "{{ ollama_data_volume.name }}:/root/.ollama"
-    networks: "{{ ollama_networks if ollama_networks | length > 0 else omit }}"
+    networks: "{{ ollama_networks | default(omit) }}"
     devices: "{{ ollama_device_mappings[ollama_gpu_type] | default(omit) }}"
     healthcheck:
       test: ["CMD-SHELL", "timeout 5 bash -c '</dev/tcp/{{ ollama_host }}/{{ ollama_port }}'"]
