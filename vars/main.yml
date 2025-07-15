@@ -3,8 +3,8 @@
 # Devices we want mapped into the container
 ollama_device_mappings:
   amd:
-    - "/dev/kfd" # Kernel Fusion Driver
-    - "/dev/dri" # Direct Rendering Infrastructure
+    - "/dev/kfd"  # Kernel Fusion Driver
+    - "/dev/dri"  # Direct Rendering Infrastructure
   nvidia: []
   none: []
 
