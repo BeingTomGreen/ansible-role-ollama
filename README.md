@@ -12,7 +12,7 @@ Given that Galaxy seems to have abandoned roles, I suggest referencing this repo
 ---
 
 roles:
-  - name: ollama
+  - name: beingtomgreen.ollama
     src: https://github.com/BeingTomGreen/ansible-role-ollama.git
 
 collections: []
